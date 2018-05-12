@@ -6,69 +6,61 @@ import Weather from "./components/Weather";
 
 const API_KEY = "a27a7942f883e232bcb34434f929d12a";
 
-
 class App extends React.Component {
+  //initial states
+  state = {
+    tempreture: undefined,
+    city: undefined,
+    country: undefined,
+    description: undefined,
+    error: undefined
+  };
 
-//initial states 
-state= {
-  tempreture : undefined,
-  city: undefined,
-  country: undefined,
-  description: undefined, 
-  error: undefined
-
-}
-
-  getWeather = async (e) =>{
+  getWeather = async e => {
     e.preventDefault();
 
     const city = e.target.elements.city.value;
     const country = e.target.elements.country.value;
-    const api_call = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}`);
+    const api_call = await fetch(
+      `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}`
+    );
 
     const data = await api_call.json();
     console.log(data);
-if (city && country) {
-    this.setState({
-      tempreture: data.main.temp,
-      city: data.name,
-      country: data.sys.country,
-      humidity: data.weather[0].description,
-      error: ""
+    if (city && country) {
+      this.setState({
+        tempreture: data.main.temp,
+        city: data.name,
+        country: data.sys.country,
+        humidity: data.weather[0].description,
+        error: ""
+      });
+    } else {
+      this.setState({
+        tempreture: undefined,
+        city: undefined,
+        country: undefined,
+        humidity: undefined,
+        error: "Please enter the value"
+      });
+    }
+  };
 
-    });
-  }
-
-  else {
-    this.setState({
-      tempreture: data.main.temp,
-      city: data.name,
-      country: data.sys.country,
-      humidity: data.weather[0].description,
-      error: ""
-    })
-  }
-}
-
-  render(){
-    return(
-      <div> 
+  render() {
+    return (
+      <div>
         <Titles />
-        <Form getWeather={this.getWeather}/>
-        <Weather tempreture={this.state.tempreture}
-        city={this.state.city}
-        country = {this.state.country}
-        humidity= {this.state.humidity}
-        error ={this.state.error}
-
-
-        
-        
-        
-        />
+        <Form getWeather={this.getWeather} />{" "}
+        <Weather
+          tempreture={this.state.tempreture}
+          city={this.state.city}
+          country={this.state.country}
+          humidity={this.state.humidity}
+          error={this.state.error}
+        />{" "}
       </div>
     );
   }
-};
+}
 
 export default App;
